@@ -4,7 +4,7 @@ import { source } from '@/lib/source';
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <DocsLayout tree={source.pageTree} nav={{ title: 'My App' }}>
+    <DocsLayout tree={source.pageTree} nav={{ title: 'Adobe Docs Site' }}>
       {children}
     </DocsLayout>
   );

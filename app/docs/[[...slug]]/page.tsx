@@ -1,6 +1,8 @@
 import { source } from '@/lib/source';
 import { DocsPage, DocsBody, DocsTitle, DocsDescription } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import { getTableOfContents } from 'fumadocs-core/content/toc';
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
@@ -10,14 +12,19 @@ export default async function Page(props: {
 
   if (!page) notFound();
 
-  const MDX = page.data.body;
+  // microCMS の本文（Markdown文字列）を取得
+  const data = page.data as any;
+  const content = data.body as string;
+  
+  // 文字列から目次（TOC）を生成
+  const toc = getTableOfContents(content);
 
   return (
-    <DocsPage toc={page.data.toc} full={page.data.full}>
-      <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription>{page.data.description}</DocsDescription>
+    <DocsPage toc={toc} full={data.full}>
+      <DocsTitle>{data.title}</DocsTitle>
+      <DocsDescription>{data.description}</DocsDescription>
       <DocsBody>
-        <MDX />
+        <MDXRemote source={content} />
       </DocsBody>
     </DocsPage>
   );
